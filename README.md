@@ -8,7 +8,7 @@ click "melvor idle helper.user.js"
 click helper setting to show setting option, or hidden setting option.
 
 
-# set-auto-sell-or-quick-sell-item  
+# set auto sell or quick sell item  
 ![](https://i.imgur.com/eOc7bG6.png)  
 edit line 19 or line 20 number to change sell item.  
 item id in https://wiki.melvoridle.com/index.php?title=Table_of_Items  
