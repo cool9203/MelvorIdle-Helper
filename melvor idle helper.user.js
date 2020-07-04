@@ -16,7 +16,8 @@ let auto_eat_food = false;
 let auto_light_bonfire = false;
 let auto_re_plant = false;
 
-let sell_item_id = [648, 649, 650, 651, 652, 653, 654, 655]
+let sell_item_id = [128, 129, 130, 131, 132];
+let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
 
 let seed_id = {0:[143, 144, 145, 146, 147, 148, 149, 150],
                1:[527, 528, 529, 530, 531, 532, 533, 534],
@@ -30,13 +31,27 @@ function loot(){
 
 function sell_junk(){
     console.log("start sell_junk");
-    for (let i = bank.length - 1; i >= 0; i--){
-        if (bank[i].type == "Junk"){
-            console.log(`${i}:${bank[i].name}`);
-            sellItem(i);
-            document.querySelector(".swal2-confirm").click()
+    for (let i = 0; i < junk_id.length; i++){
+        let result = getBankId(junk_id[i]);
+        if (result != false){
+            sell_item(result);
         }
     }
+
+    for (let i = 0; i < sell_item_id.length; i++){
+        let result = getBankId(sell_item_id[i]);
+        if (result != false){
+            sell_item(result);
+        }
+    }
+}
+
+
+async function sell_item(index){
+    console.log(`${i}:${bank[index].name}`);
+    sellItem(index);
+    await delay(50);
+    document.querySelector(".swal2-confirm").click()
 }
 
 
@@ -44,8 +59,9 @@ function eat_food(){
     console.log("start eat_food");
     let max_hp = skillLevel[9] * 10;
     let now_hp = combatData["player"].hitpoints;
-    if (now_hp <= max_hp * eat_food_size){
+    while (now_hp <= max_hp * eat_food_size){
         eatFood();
+        now_hp = combatData["player"].hitpoints;
     }
 }
 
@@ -56,19 +72,57 @@ function light_bonfire(){
 }
 
 
-function add_gloop(){
+function add_gloop_or_compost(i, j){
     console.log("start add_gloop");
-    for (let i = 0; i < newFarmingAreas.length; i++){
-        for (let j = 0; j < newFarmingAreas[i].patches.length; j++){
-            //console.log(i,j);
-            addGloop(i ,j);
+    if (i === undefined || j === undefined){
+        for (let i = 0; i < newFarmingAreas.length; i++){
+            for (let j = 0; j < newFarmingAreas[i].patches.length; j++){
+                gloop_or_compost(i ,j);
+            }
         }
+    }else{
+        gloop_or_compost(i ,j);
+    }
+}
+
+
+function gloop_or_compost(i, j){
+    if(checkBankForItem(CONSTANTS.item.Weird_Gloop)) {
+        addGloop(i,j);
+    } else {
+        if(checkBankForItem(CONSTANTS.item.Compost)) {
+            if(bank[getBankId(CONSTANTS.item.Compost)].qty < 5) {
+                buyQty = 5 - bank[getBankId(CONSTANTS.item.Compost)].qty
+                buyCompost(true)
+            }
+        } else {
+            buyQty = 5
+            buyCompost(true)
+        }
+        addCompost(i,j,5)
     }
 }
 
 
 function re_plant(){
-    ;
+    for (let i = 0; i < newFarmingAreas.length; i++){
+        for (let j = 0; j < newFarmingAreas[i].patches.length; j++){
+            let farm_patches = newFarmingAreas[i].patches[j];
+            let last_seed = farm_patches.seedID;
+            let grown_id = items[last_seed].grownItemID;
+            if (farm_patches.hasGrown){  //if now is grown
+                if(checkBankForItem(grown_id) || (bankMax + baseBankMax) > bank.length){  //check last_seed grown item in bank or bank is full
+                    harvestSeed(i,j);
+                    if (checkBankForItem(last_seed)){
+                        add_gloop_or_compost(i, j);
+                    }
+                }
+                selectedPatch = [i,j];
+                selectedSeed = last_seed;
+                plantSeed();
+            }
+        }
+    }
 }
 
 
@@ -147,11 +201,12 @@ function helper_option_display(){
 
     //create option and bind option listen function
     let next_obj = create_helper_option(helper_setting, "", sell_junk, "button", "sell junk");
-    next_obj = create_helper_option(next_obj, "", add_gloop, "button", "add all gloop");
+    next_obj = create_helper_option(next_obj, "", add_gloop_or_compost, "button", "add all gloop");
     next_obj = create_helper_option(next_obj, "auto loot", change_auto_loot, "checkbox", "");
     next_obj = create_helper_option(next_obj, "auto sell junk", change_auto_sell_junk, "checkbox", "");
     next_obj = create_helper_option(next_obj, "auto eat food", change_auto_eat_food, "checkbox", "");
     next_obj = create_helper_option(next_obj, "auto light bonfire", change_auto_light_bonfire, "checkbox", "");
+    next_obj = create_helper_option(next_obj, "auto replant", change_auto_re_plant, "checkbox", "");
 })();
 
 function delay(ms){
@@ -201,5 +256,15 @@ function change_auto_light_bonfire(){
     }else{
         clearInterval(auto_light_bonfire);
         auto_light_bonfire = false;
+    }
+}
+
+function change_auto_re_plant(){
+    if (auto_re_plant == false){
+        re_plant();
+        auto_re_plant = setInterval(re_plant, 300000);
+    }else{
+        clearInterval(auto_re_plant);
+        auto_re_plant = false;
     }
 }
