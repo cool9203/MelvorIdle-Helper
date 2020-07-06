@@ -1,8 +1,8 @@
 # how to install  
-## step 1. 
+### step 1. 
 install [tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
 
-## step 2.
+### step 2.
 click [melvor idle helper.user.js](https://github.com/cool9203/MelvorIdle-Helper/blob/master/melvor%20idle%20helper.user.js)  
 ![](https://i.imgur.com/JUx8S7T.png)  
 
