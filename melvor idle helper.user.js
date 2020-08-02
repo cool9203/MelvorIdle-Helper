@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.0.test (for melvor version:0.15.4)
+// @version      0.0.test (for melvor version:0.16.1)
 // @description  try to take over the world!
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-let eat_food_size = 0.5;
+let eat_food_size = 0.8;
 let auto_loot = false;
 let auto_sell_junk = false;
 let auto_eat_food = false;
@@ -47,10 +47,9 @@ function sell_junk(){
 }
 
 
-async function sell_item(index){
+function sell_item(index){
     console.log(`${i}:${bank[index].name}`);
     sellItem(index);
-    await delay(50);
     document.querySelector(".swal2-confirm").click()
 }
 
@@ -192,7 +191,7 @@ function helper_option_display(){
 
     //create helper button after setting_button and listen helper button.
     //listen action:show or hidden ".helper_option"
-    let setting_button = document.querySelectorAll(".nav-main-item")[32];
+    let setting_button = document.querySelectorAll(".nav-main-item")[34];
     let helper_setting = create_helper_setting_button();
     setting_button.insertAdjacentElement("afterend", helper_setting);
     helper_setting.addEventListener("click", function(){
@@ -262,7 +261,7 @@ function change_auto_light_bonfire(){
 function change_auto_re_plant(){
     if (auto_re_plant == false){
         re_plant();
-        auto_re_plant = setInterval(re_plant, 300000);
+        auto_re_plant = setInterval(re_plant, 301000);
     }else{
         clearInterval(auto_re_plant);
         auto_re_plant = false;
