@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.0.test (for melvor version:0.16.1)
+// @version      0.0.test (for melvor version:0.16.2.1)
 // @description  try to take over the world!
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
@@ -34,21 +34,21 @@ function sell_junk(){
     for (let i = 0; i < junk_id.length; i++){
         let result = getBankId(junk_id[i]);
         if (result != false){
-            sell_item(result);
+            sell_item(junk_id[i]);
         }
     }
 
     for (let i = 0; i < sell_item_id.length; i++){
         let result = getBankId(sell_item_id[i]);
         if (result != false){
-            sell_item(result);
+            sell_item(sell_item_id[i]);
         }
     }
 }
 
 
 function sell_item(index){
-    console.log(`${i}:${bank[index].name}`);
+    console.log(`sell item: category=${items[index].category}, type=${items[index].type}, name=${items[index].name}`);
     sellItem(index);
     document.querySelector(".swal2-confirm").click()
 }
@@ -191,7 +191,7 @@ function helper_option_display(){
 
     //create helper button after setting_button and listen helper button.
     //listen action:show or hidden ".helper_option"
-    let setting_button = document.querySelectorAll(".nav-main-item")[34];
+    let setting_button = document.querySelectorAll(".nav-main-item")[35];
     let helper_setting = create_helper_setting_button();
     setting_button.insertAdjacentElement("afterend", helper_setting);
     helper_setting.addEventListener("click", function(){
