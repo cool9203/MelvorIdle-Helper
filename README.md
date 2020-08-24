@@ -21,14 +21,14 @@ item id in [melvor wiki](https://wiki.melvoridle.com/index.php?title=Table_of_It
 
 
 # feature  
-# all features maybe have bug, except auto sell junk and quick sell junk feature.
-- [] auto loot
-- [] auto eat food : your hp <= (0.5 * max_hp)  than eat food
-- [] auto light bonfire
+all features maybe have bug, except "auto sell junk" and "quick sell junk" feature.
+- [ ] auto loot
+- [ ] auto eat food : your hp <= (0.5 * max_hp)  than eat food
+- [ ] auto light bonfire
 - [x] auto sell junk : sell all gem and all junk, you can set sell item. watch [this](#set-auto-sell-or-quick-sell-item)
 - [x] quick sell junk : same as auto sell junk
-- [] quick add gloop : auto fertilize, if your not have weird gloop, well buy 5 cpmpost and use
-- [] auto replant : auto plant last seed, auto fertilize and auto harvest
+- [ ] quick add gloop : auto fertilize, if your not have weird gloop, well buy 5 cpmpost and use
+- [ ] auto replant : auto plant last seed, auto fertilize and auto harvest
 
 ---
 
