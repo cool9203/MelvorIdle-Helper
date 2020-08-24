@@ -1,4 +1,4 @@
-# for melvor version : Alpha v0.16.1  
+# for melvor version : Alpha v0.16.2.1  
 
 # how to install  
 ### step 1. 
@@ -21,13 +21,14 @@ item id in [melvor wiki](https://wiki.melvoridle.com/index.php?title=Table_of_It
 
 
 # feature  
-- [x] auto loot
-- [x] auto eat food : your hp <= (0.5 * max_hp)  than eat food
-- [x] auto light bonfire
+# all features maybe have bug, except auto sell junk and quick sell junk feature.
+- [] auto loot
+- [] auto eat food : your hp <= (0.5 * max_hp)  than eat food
+- [] auto light bonfire
 - [x] auto sell junk : sell all gem and all junk, you can set sell item. watch [this](#set-auto-sell-or-quick-sell-item)
 - [x] quick sell junk : same as auto sell junk
-- [x] quick add gloop : auto fertilize, if your not have weird gloop, well buy 5 cpmpost and use
-- [x] auto replant : auto plant last seed, auto fertilize and auto harvest
+- [] quick add gloop : auto fertilize, if your not have weird gloop, well buy 5 cpmpost and use
+- [] auto replant : auto plant last seed, auto fertilize and auto harvest
 
 ---
 
