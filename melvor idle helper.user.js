@@ -1,27 +1,26 @@
 // ==UserScript==
 // @name         melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.0.test (for melvor version:0.16.2.1)
+// @version      0.0.test (for melvor version:Alpha v0.17)
 // @description  try to take over the world!
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
 // @include      https://melvoridle.com/*
 // @grant        none
 // ==/UserScript==
+let MELVOR_VERSION = "Alpha v0.17";
 
-let eat_food_size = 0.8;
+let eat_food_size = 0.5;
 let auto_loot = false;
 let auto_sell_junk = false;
 let auto_eat_food = false;
 let auto_light_bonfire = false;
 let auto_re_plant = false;
 
-let sell_item_id = [128, 129, 130, 131, 132];
+let sell_item_id = [];
 let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
 
-let seed_id = {0:[143, 144, 145, 146, 147, 148, 149, 150],
-               1:[527, 528, 529, 530, 531, 532, 533, 534],
-               2:[160, 161, 162, 163, 164]};
+//let sell_item_id = [128, 129, 130, 131, 132, 669, 667, 670, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
 function loot(){
     console.log("start loot");
@@ -54,13 +53,26 @@ function sell_item(index){
 }
 
 
-function eat_food(){
+async function eat_food(){
     console.log("start eat_food");
     let max_hp = skillLevel[9] * 10;
     let now_hp = combatData["player"].hitpoints;
-    while (now_hp <= max_hp * eat_food_size){
-        eatFood();
-        now_hp = combatData["player"].hitpoints;
+    let enemy_attack = parseInt( document.querySelector("#combat-enemy-strength-bonus").innerHTML.replace("(", "").replace(")", "") );
+
+    if ((now_hp <= max_hp * eat_food_size) || (now_hp <= enemy_attack)){
+        while (true){
+            let my_progress = parseInt( document.querySelector("#combat-progress-attack-player").style.width.replace("%", "") );
+            let enemy_progress = parseInt( document.querySelector("#combat-progress-attack-enemy").style.width.replace("%", "") );
+            if (enemy_progress >= my_progress || my_progress <= 10 || (now_hp <= enemy_attack)){
+                break;
+            }else{
+                await delay(50);
+            }
+        }
+        while (now_hp < max_hp * 0.98){
+            eatFood();
+            now_hp = combatData["player"].hitpoints;
+        }
     }
 }
 
@@ -188,6 +200,7 @@ function helper_option_display(){
 
 (async function() {
     console.log("tampermonkey start");
+    console.log("melvor idle helper version:", MELVOR_VERSION)
 
     //create helper button after setting_button and listen helper button.
     //listen action:show or hidden ".helper_option"
@@ -241,7 +254,7 @@ function change_auto_sell_junk(){
 function change_auto_eat_food(){
     if (auto_eat_food == false){
         eat_food();
-        auto_eat_food = setInterval(eat_food, 1000);
+        auto_eat_food = setInterval(eat_food, 1500);
     }else{
         clearInterval(auto_eat_food);
         auto_eat_food = false;
