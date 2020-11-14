@@ -4,7 +4,7 @@
 // @namespace    https://melvoridle.com/
 // @version      0.1 (for melvor version:Alpha v0.17)
 // @description  melvor idle helper with 7 features
-// @description:zh-TW  melvor idle helper with 7 features
+// @description:zh-TW  自動掠奪、自動吃食物、自動種植、自動賣垃圾...等，共7種功能。
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
 // @include      https://melvoridle.com/*
