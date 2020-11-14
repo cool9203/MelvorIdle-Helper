@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         melvor idle helper
+// @name:zh-TW   melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.0.test (for melvor version:Alpha v0.17)
-// @description  try to take over the world!
+// @version      0.1 (for melvor version:Alpha v0.17)
+// @description  melvor idle helper with 7 features
+// @description:zh-TW  melvor idle helper with 7 features
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
 // @include      https://melvoridle.com/*
