@@ -1,6 +1,6 @@
 # for melvor version : Alpha v0.17 
 
-[中文版本的README](https://github.com/cool9203/MelvorIdle-Helper/blob/master/README.md)  
+[中文版本的README](https://github.com/cool9203/MelvorIdle-Helper/blob/master/README:zh-TW.md)  
 
 # feature introduction and to do list
 - [x] auto loot
