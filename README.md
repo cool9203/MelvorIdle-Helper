@@ -1,5 +1,7 @@
 # for melvor version : Alpha v0.17 
 
+[README chinese version](https://github.com/cool9203/MelvorIdle-Helper/blob/master/README.md)  
+
 # feature introduction and to do list
 - [x] auto loot
 - [x] auto eat food :  
