@@ -1,4 +1,7 @@
 # 對應melvor版本 : Alpha v0.17  
+
+[README english version](https://github.com/cool9203/MelvorIdle-Helper/blob/master/README.md)  
+
 # 功能介紹與預訂更新功能
 - [x] 自動loot
 - [x] 自動吃食物 :  
