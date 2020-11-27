@@ -2,28 +2,34 @@
 // @name         melvor idle helper
 // @name:zh-TW   melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.1.1 (for melvor version:Alpha v0.17)
-// @description  have 7 features : auto loot, auto eat food, auto replant, auto sell junk, quick sell junk, auto light bonfire and quick add gloop.
-// @description:zh-TW  共7種功能 : 自動掠奪、自動吃食物、自動種植、自動賣垃圾、快速賣垃圾、自動燒柴、快速施肥。
+// @version      0.1 (for melvor version:Alpha v0.17)
+// @description  have 5 features : auto loot, auto eat food, auto replant, auto sell junk and auto light bonfire.
+// @description:zh-TW  共5種功能 : 自動掠奪、自動吃食物、自動種植、自動賣垃圾、自動燒柴。
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
 // @include      https://melvoridle.com/*
 // @grant        none
 // ==/UserScript==
+
+//---------show log setting---------
+let SHOW_LOG_STATUS = false;
 let MELVOR_VERSION = "Alpha v0.17";
 
+//---------conditions setting---------
 let eat_food_size = 0.5;
+let sell_item_id = [];
+let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
+//let sell_item_id = [128, 129, 130, 131, 132, 669, 667, 670, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+
+//---------global variable(don't edit this area)---------
 let auto_loot = false;
 let auto_sell_junk = false;
 let auto_eat_food = false;
 let auto_light_bonfire = false;
 let auto_re_plant = false;
 
-let sell_item_id = [];
-let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
 
-//---------show log setting---------
-let SHOW_LOG_STATUS = false;
+//---------features---------
 
 function loot(){
     console.log("start loot");
@@ -67,11 +73,16 @@ async function eat_food(){
     }
 
     if ((now_hp <= max_hp * eat_food_size) || (now_hp <= enemy_attack)){
+        if (!equip_and_select_food()){
+            stopCombat(false, true, true);
+            showMap(false);
+            this.blur();
+            alert("you not have any food");
+        }
         while (true){
             let my_progress = parseInt( document.querySelector("#combat-progress-attack-player").style.width.replace("%", "") );
             let enemy_progress = parseInt( document.querySelector("#combat-progress-attack-enemy").style.width.replace("%", "") );
-            if (enemy_progress >= my_progress || my_progress <= 10 || (now_hp <= enemy_attack) || (isNaN(enemy_attack) && (now_hp <= max_hp * eat_food_size))
-               ){
+            if ( my_progress <= 10 || (now_hp <= enemy_attack) || (isNaN(enemy_attack) && (now_hp <= max_hp * eat_food_size)) ){
                 if (SHOW_LOG_STATUS){
                     console.log(`  my_progress:${my_progress}\n  enemy_progress:${enemy_progress}\n  now_hp:${now_hp}\n  enemy_attack:${enemy_attack}\n`);
                 }
@@ -82,9 +93,62 @@ async function eat_food(){
         }
         while (now_hp < max_hp * 0.98){
             eatFood();
-            now_hp = combatData["player"].hitpoints;
+            let eated_hp = combatData["player"].hitpoints;
+            if (eated_hp == now_hp){
+                if (eated_hp == max_hp || !equip_and_select_food()){
+                    break;
+                }
+            }else{
+                if (SHOW_LOG_STATUS){
+                    console.log(`$eat_food:{now_hp}->${eated_hp}`);
+                }
+                now_hp = eated_hp;
+            }
         }
     }
+}
+
+
+async function equip_and_select_food(){
+    //get equippedFood count
+    let equipped_food_count = 0;
+    for (let i = 0; i < 3; i++){
+        if (equippedFood.itemID == 0){
+            equipped_food_count += 1;
+        }
+    }
+
+    //equip food
+    for (let i = 0; i < bank.length; i++){
+        if (equipped_food_count == 3){
+            break;
+        }
+        let item_id = bank[i].id;
+        if (items[item_id].canEat == true){  //if can eat
+            selectBankItem(item_id);
+            equipFoodQty = bank[i].qty;
+            equipFood();
+            equipped_food_count += 1;
+            i -= 1;
+        }
+    }
+
+    //select food
+    for (let i = 0; i < 3; i++){
+        if (equippedFood.itemID != 0){
+            selectEquippedFood(i);
+            if (SHOW_LOG_STATUS){
+                console.log("equip and select food");
+            }
+            return true;
+        }
+    }
+
+    //if cann't select equip food, need quit combat ot thieving
+    if (SHOW_LOG_STATUS){
+        console.log("not have any food to equip and select");
+    }
+    return false;
 }
 
 
@@ -147,6 +211,7 @@ function re_plant(){
     }
 }
 
+//---------option setting button---------
 
 function create_helper_setting_button(){
     let main_item = document.createElement("li");
@@ -209,6 +274,7 @@ function helper_option_display(){
 }
 
 
+//---------main---------
 (async function() {
     console.log("tampermonkey start");
     console.log("melvor idle helper version:", MELVOR_VERSION)
@@ -225,6 +291,7 @@ function helper_option_display(){
     //create option and bind option listen function
     let next_obj = create_helper_option(helper_setting, "", sell_junk, "button", "sell junk");
     next_obj = create_helper_option(next_obj, "", add_gloop_or_compost, "button", "add all gloop");
+    next_obj = create_helper_option(next_obj, "", equip_and_select_food, "button", "equip and select food");
     next_obj = create_helper_option(next_obj, "auto loot", change_auto_loot, "checkbox", "");
     next_obj = create_helper_option(next_obj, "auto sell junk", change_auto_sell_junk, "checkbox", "");
     next_obj = create_helper_option(next_obj, "auto eat food", change_auto_eat_food, "checkbox", "");
@@ -241,7 +308,8 @@ function delay(ms){
 }
 
 
-//listen function
+//---------listen function---------
+
 function change_auto_loot(){
     if (auto_loot == false){
         loot();
