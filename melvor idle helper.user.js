@@ -2,9 +2,9 @@
 // @name         melvor idle helper
 // @name:zh-TW   melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.1 (for melvor version:Alpha v0.17)
-// @description  have 5 features : auto loot, auto eat food, auto replant, auto sell junk and auto light bonfire.
-// @description:zh-TW  共5種功能 : 自動掠奪、自動吃食物、自動種植、自動賣垃圾、自動燒柴。
+// @version      0.1.1 (for melvor version:Alpha v0.17)
+// @description  have 7 features : auto loot, auto eat food, auto replant, auto sell junk, quick sell junk, auto light bonfire and quick add gloop.
+// @description:zh-TW  共7種功能 : 自動掠奪、自動吃食物、自動種植、自動賣垃圾、快速賣垃圾、自動燒柴、快速施肥。
 // @author       cool9203
 // @match        https://melvoridle.com/index.php
 // @include      https://melvoridle.com/*
@@ -21,6 +21,9 @@ let auto_re_plant = false;
 
 let sell_item_id = [];
 let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
+
+//---------show log setting---------
+let SHOW_LOG_STATUS = fasle;
 
 function loot(){
     console.log("start loot");
@@ -57,13 +60,21 @@ async function eat_food(){
     console.log("start eat_food");
     let max_hp = skillLevel[9] * 10;
     let now_hp = combatData["player"].hitpoints;
-    let enemy_attack = parseInt( document.querySelector("#combat-enemy-strength-bonus").innerHTML.replace("(", "").replace(")", "") );
+    let enemy_attack = parseInt( document.querySelector("#combat-enemy-strength-bonus").innerHTML.replace("(", "").replace(")", "").replace("-", "") );
+
+    if (SHOW_LOG_STATUS){
+        console.log(`enemy_attack:${enemy_attack}`);
+    }
 
     if ((now_hp <= max_hp * eat_food_size) || (now_hp <= enemy_attack)){
         while (true){
             let my_progress = parseInt( document.querySelector("#combat-progress-attack-player").style.width.replace("%", "") );
             let enemy_progress = parseInt( document.querySelector("#combat-progress-attack-enemy").style.width.replace("%", "") );
-            if (enemy_progress >= my_progress || my_progress <= 10 || (now_hp <= enemy_attack)){
+            if (enemy_progress >= my_progress || my_progress <= 10 || (now_hp <= enemy_attack) || (isNaN(enemy_attack) && (now_hp <= max_hp * eat_food_size))
+               ){
+                if (SHOW_LOG_STATUS){
+                    console.log(`  my_progress:${my_progress}\n  enemy_progress:${enemy_progress}\n  now_hp:${now_hp}\n  enemy_attack:${enemy_attack}\n`);
+                }
                 break;
             }else{
                 await delay(50);
