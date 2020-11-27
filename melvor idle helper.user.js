@@ -2,7 +2,7 @@
 // @name         melvor idle helper
 // @name:zh-TW   melvor idle helper
 // @namespace    https://melvoridle.com/
-// @version      0.1 (for melvor version:Alpha v0.17)
+// @version      0.2 (for melvor version:Alpha v0.17)
 // @description  have 5 features : auto loot, auto eat food, auto replant, auto sell junk and auto light bonfire.
 // @description:zh-TW  共5種功能 : 自動掠奪、自動吃食物、自動種植、自動賣垃圾、自動燒柴。
 // @author       cool9203
@@ -29,6 +29,10 @@ let auto_light_bonfire = false;
 let auto_re_plant = false;
 
 
+//---------show message status variable---------
+
+
+
 //---------features---------
 
 function loot(){
@@ -42,23 +46,26 @@ function sell_junk(){
     for (let i = 0; i < junk_id.length; i++){
         let result = getBankId(junk_id[i]);
         if (result != false){
-            sell_item(junk_id[i]);
+            sell_item(result);
         }
     }
 
     for (let i = 0; i < sell_item_id.length; i++){
         let result = getBankId(sell_item_id[i]);
         if (result != false){
-            sell_item(sell_item_id[i]);
+            sell_item(result);
         }
     }
 }
 
 
 function sell_item(index){
-    console.log(`sell item: category=${items[index].category}, type=${items[index].type}, name=${items[index].name}`);
-    sellItem(index);
-    document.querySelector(".swal2-confirm").click()
+    let item_id = bank[index].id;
+    console.log(`sell item: category=${items[item_id].category}, type=${items[item_id].type}, name=${items[item_id].name}`);
+    selectBankItem(bank[index].id);
+    sellQty = bank[index].qty;
+    sellItem();
+    document.querySelector(".swal2-confirm").click();
 }
 
 
@@ -73,16 +80,23 @@ async function eat_food(){
     }
 
     if ((now_hp <= max_hp * eat_food_size) || (now_hp <= enemy_attack)){
-        if (!equip_and_select_food()){
-            stopCombat(false, true, true);
-            showMap(false);
-            this.blur();
-            alert("you not have any food");
+        if (!equip_and_select_food()){  //if (not have any food) && ( (in combat) || (in thieving) )
+            if (!isNaN(enemy_attack)){
+                stopCombat(false, true, true);
+                alert("you not have any food");
+            }
+            else if (npcID != null){
+                pickpocket(npcID);
+                alert("you not have any food");
+            }
+            return;
         }
+
         while (true){
             let my_progress = parseInt( document.querySelector("#combat-progress-attack-player").style.width.replace("%", "") );
             let enemy_progress = parseInt( document.querySelector("#combat-progress-attack-enemy").style.width.replace("%", "") );
-            if ( my_progress <= 10 || (now_hp <= enemy_attack) || (isNaN(enemy_attack) && (now_hp <= max_hp * eat_food_size)) ){
+            enemy_attack = parseInt( document.querySelector("#combat-enemy-strength-bonus").innerHTML.replace("(", "").replace(")", "").replace("-", "") );
+            if (isNaN(enemy_attack) || my_progress <= 10 || (now_hp <= enemy_attack) || (npcID != null && (now_hp <= max_hp * eat_food_size)) ){
                 if (SHOW_LOG_STATUS){
                     console.log(`  my_progress:${my_progress}\n  enemy_progress:${enemy_progress}\n  now_hp:${now_hp}\n  enemy_attack:${enemy_attack}\n`);
                 }
@@ -91,6 +105,7 @@ async function eat_food(){
                 await delay(50);
             }
         }
+
         while (now_hp < max_hp * 0.98){
             eatFood();
             let eated_hp = combatData["player"].hitpoints;
@@ -100,20 +115,20 @@ async function eat_food(){
                 }
             }else{
                 if (SHOW_LOG_STATUS){
-                    console.log(`$eat_food:{now_hp}->${eated_hp}`);
+                    console.log(`eat_food:${now_hp}->${eated_hp}`);
                 }
-                now_hp = eated_hp;
             }
+            now_hp = eated_hp;
         }
     }
 }
 
 
-async function equip_and_select_food(){
+function equip_and_select_food(){
     //get equippedFood count
     let equipped_food_count = 0;
     for (let i = 0; i < 3; i++){
-        if (equippedFood.itemID == 0){
+        if (equippedFood[i].itemID != 0){
             equipped_food_count += 1;
         }
     }
@@ -135,10 +150,10 @@ async function equip_and_select_food(){
 
     //select food
     for (let i = 0; i < 3; i++){
-        if (equippedFood.itemID != 0){
+        if (equippedFood[i].itemID != 0){
             selectEquippedFood(i);
             if (SHOW_LOG_STATUS){
-                console.log("equip and select food");
+                console.log("select food : equip and select food");
             }
             return true;
         }
