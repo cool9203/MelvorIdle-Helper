@@ -7,7 +7,12 @@
 - [x] auto eat food :  
 eat food condition : now_hp < (max_hp * 0.5)  or  now_hp <= enemy attack  
 now can clever to auto eat food. as follows:  
-eat food right away when (your attack progress <= enemy progress) or (your attack pregress <= 10%) or (now_hp <= enemy attack)  
+eat food right away when  
+  1. your attack progress <= enemy progress  
+  2. your attack pregress <= 10%  
+  3. now_hp <= enemy attack  
+  4. enemy attack == NaN and (now_hp < (max_hp * 0.5))
+  - [ ] next version : auto equip and select food, if bank not have food, will quit combat or thieving.  
 - [x] auto light bonfire
 - [x] auto sell junk :  
 sell all junk, you can set sell item. watch [this](#how-to-set-auto-sell-or-quick-sell-item)  
