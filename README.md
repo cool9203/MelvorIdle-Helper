@@ -4,7 +4,7 @@
 
 # feature introduction and to do list
 - [x] auto loot
-- [x] auto eat food :  
+- [x] auto eat food(Golbin Raid will not work) :  
 now can auto equip and select food. if you not have any food, will quit combat or thieving.  
 now can clever to auto eat food. as follows:  
 eat food condition : now_hp < (max_hp * 0.5)  or  now_hp <= enemy attack  
