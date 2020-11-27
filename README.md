@@ -5,14 +5,14 @@
 # feature introduction and to do list
 - [x] auto loot
 - [x] auto eat food :  
+now can auto equip and select food. if you not have any food, will quit combat or thieving.
 now can clever to auto eat food. as follows:  
 eat food condition : now_hp < (max_hp * 0.5)  or  now_hp <= enemy attack  
 eat food right away when (1 conditions met will eat food):  
-  1. your attack progress <= enemy progress  
+  1. combat round end  
   2. your attack pregress <= 10%  
   3. now_hp <= enemy attack  
-  4. enemy attack == NaN and (now_hp < (max_hp * 0.5))
-  - [ ] next version : auto equip and select food, if bank not have food, will quit combat or thieving.  
+  4. in thieving and (now_hp < (max_hp * 0.5))
 - [x] auto light bonfire
 - [x] auto sell junk :  
 sell all junk, you can set sell item. watch [this](#how-to-set-auto-sell-or-quick-sell-item)  
