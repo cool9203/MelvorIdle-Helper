@@ -5,9 +5,9 @@
 # feature introduction and to do list
 - [x] auto loot
 - [x] auto eat food :  
-eat food condition : now_hp < (max_hp * 0.5)  or  now_hp <= enemy attack  
 now can clever to auto eat food. as follows:  
-eat food right away when  
+eat food condition : now_hp < (max_hp * 0.5)  or  now_hp <= enemy attack  
+eat food right away when (1 conditions met will eat food):  
   1. your attack progress <= enemy progress  
   2. your attack pregress <= 10%  
   3. now_hp <= enemy attack  
