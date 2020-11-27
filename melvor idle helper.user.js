@@ -23,7 +23,7 @@ let sell_item_id = [];
 let junk_id = [648, 649, 650, 651, 652, 653, 654, 655];
 
 //---------show log setting---------
-let SHOW_LOG_STATUS = fasle;
+let SHOW_LOG_STATUS = false;
 
 function loot(){
     console.log("start loot");
